@@ -1,0 +1,38 @@
+stages:
+  - build
+  - deploy
+
+build:
+  image: node:12-alpine
+  stage: build
+  allow_failure: false
+  environment: integration
+  script:
+    - npm install --progress=false
+    - cp $ENV .env
+    - npm run build
+    - npm pack
+    - mkdir package
+    - mv *.tgz package/
+  cache:
+    paths:
+      - node_modules/
+  artifacts:
+    name: '$CI_PROJECT_NAME-$CI_BUILD_REF'
+    paths:
+      - build
+      - package
+    expire_in: 1 week
+
+deploy:
+  image: centos:7
+  stage: deploy
+  environment: integration
+  script:
+    - mkdir -p ~/.ssh
+    - echo "$CHARLIE_KEY" >> ~/.ssh/id_dsa
+    - chmod 600 ~/.ssh/id_dsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - yum update && yum upgrade -y
+    - yum install -y rsync openssh openssh-clients
+    - rsync -ravzh --no-perms -O --delete build/ $CHARLIE_USER@$CHARLIE_SERVER:$PROJECT_PATH

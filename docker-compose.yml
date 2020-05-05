@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  node:
+    container_name: viz_node
+    image: node:alpine
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/app
+    ports:
+      - ${NODE_PORT:-3000}:3000
+    restart: unless-stopped
+    working_dir: /usr/app
+    command: sh -c "npm install && npm install node-sass && npm start"
