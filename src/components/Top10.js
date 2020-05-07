@@ -7,14 +7,20 @@ const Top10 = () => {
   const [options, setOptions] = useState({
     chart: {
       id: "top-chart",
-      background: "#fff"
+      background: "#fff",
+      width: "100%"
     },
     xaxis: {
       categories: []
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true
+      }
     }
   });
   const [series, setSeries] = useState([]);
-  const [count, setCount] = useState(5);
+  const [count, setCount] = useState(10);
   const [countryOptions, setCountryOptions] = useState([]);
   const [country, setCountry] = useState("");
   const [roleOptions, setRoleOptions] = useState([]);
@@ -43,6 +49,7 @@ const Top10 = () => {
     queryParams += `limit=${count}&`;
     let title = `Top ${count} Companies Layoff in South East Asia`;
     if (country) title = `Top ${count} Companies Layoff in ${country}`;
+    if (role) title += ` with role ${role}`;
     axios
       .get(`/company?${queryParams}`)
       .then(res => {
@@ -59,7 +66,7 @@ const Top10 = () => {
         });
         setSeries([
           {
-            name: "Count",
+            name: "Layoff",
             data: companies.map(c => c.count)
           }
         ]);
@@ -84,11 +91,11 @@ const Top10 = () => {
     axios
       .get(`/role/list`)
       .then(res => {
-        setRoleOptions(
-          res.data.data.roles.map(c => {
-            return { key: c.name, value: c.name, text: c.name };
-          })
-        );
+        let data = [{ key: null, value: null, text: "All Roles" }];
+        let allRoles = res.data.data.roles.map(c => {
+          return { key: c.name, value: c.name, text: c.name };
+        });
+        setRoleOptions([...data, ...allRoles]);
       })
       .catch(() => {});
   };
@@ -117,8 +124,7 @@ const Top10 = () => {
         options={options}
         series={series}
         type="bar"
-        width={500}
-        height={320}
+        height={480}
       />
     </div>
   );
