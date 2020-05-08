@@ -25,29 +25,19 @@ const Top10 = () => {
   const [country, setCountry] = useState("");
   const [roleOptions, setRoleOptions] = useState([]);
   const [role, setRole] = useState("");
-  const [countOptions, setCountOptions] = useState([
+  const [countOptions] = useState([
     { key: 5, value: 5, text: 5 },
     { key: 10, value: 10, text: 10 },
     { key: 20, value: 20, text: 20 },
     { key: 25, value: 25, text: 25 }
   ]);
 
-  useEffect(() => {
-    getData();
-    getCountries();
-    getRoles();
-  }, []);
-
-  useEffect(() => {
-    getData();
-  }, [role, country, count]);
-
   const getData = () => {
     let queryParams = "";
     if (country) queryParams += `country=${country}&`;
     if (role) queryParams += `role=${role}&`;
     queryParams += `limit=${count}&`;
-    let title = `Top ${count} Companies Layoff in South East Asia`;
+    let title = `Top ${count} Companies Layoff`;
     if (country) title = `Top ${count} Companies Layoff in ${country}`;
     if (role) title += ` with role ${role}`;
     axios
@@ -61,7 +51,11 @@ const Top10 = () => {
             categories: companies.map(c => c.company)
           },
           title: {
-            text: title
+            text: title,
+            style: {
+              fontSize: "16px",
+              fontWeight: "bold"
+            }
           }
         });
         setSeries([
@@ -100,6 +94,18 @@ const Top10 = () => {
       .catch(() => {});
   };
 
+  useEffect(() => {
+    getData();
+    getCountries();
+    getRoles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role, country, count]);
+
   return (
     <div className="graph-container">
       <Select
@@ -120,12 +126,7 @@ const Top10 = () => {
         className="graph-select"
         onChange={(e, { value }) => setCount(value)}
       />
-      <Chart
-        options={options}
-        series={series}
-        type="bar"
-        height={480}
-      />
+      <Chart options={options} series={series} type="bar" height={480} />
     </div>
   );
 };
