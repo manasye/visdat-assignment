@@ -5,7 +5,17 @@ const Navbar = () => {
   return (
     <div className="topnav">
       <Container>
-        <a className="active">Startup Layoff Dashboard</a>
+        <a className="active" href="/">
+          COVID Startup Layoff
+        </a>
+        <a
+          className="active right"
+          href="http://seacosystem.com/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Data from May 1st, 2020
+        </a>
       </Container>
     </div>
   );
