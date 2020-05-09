@@ -17,87 +17,111 @@ const RoleLayoff = () => {
 	const [countryOptions, setCountryOptions] = useState([]);
 	const [countRole, setCountRole] = useState(0);
 
-	const getRoleData = () => {
-		let queryParams = "";
-		if (country) {
-			queryParams += `country=${country}&`;
-			axios
-				.get(`/company?${queryParams}`)
-				.then((res) => {
-					console.log(res.data.data.data);
-					let labelCountries = res.data.data.data.map((el) => {
-						return el.company;
-					});
-					let seriesCountries = res.data.data.data.map((el) => {
-						return el.count;
-					});
-					setOptions({
-						...options.chart,
-						labels: labelCountries,
-					});
-					setSeries(seriesCountries);
-				})
-				.catch(() => {});
-		} else {
-			axios
-				.get(`/role`)
-				.then((res) => {
-					console.log(res.data.data);
-					let labelRoles = res.data.data.map((role) => {
-						return role.name;
-					});
-					let seriesRoles = res.data.data.map((role) => {
-						return role.count;
-					});
-					setOptions({
-						...options.chart,
-						labels: labelRoles,
-						title: {
-							text: "Total Role Layoff",
-							style: {
-								fontSize: "16px",
-								fontWeight: "bold",
-							},
-						},
-					});
-					setSeries(seriesRoles);
-					let count = 0;
-					for (let i = 0; i < res.data.data.length; i++) {
-						count += parseInt(res.data.data[i].count);
-					}
-					// let countRoles = res.data.data.map((el) => {
-					// 	count += parseInt(el.count);
-					// });
-					console.log(count);
-					setCountRole(count);
-				})
-				.catch(() => {});
-		}
-	};
-
-	const getCountries = () => {
-		axios
-			.get("/country/list")
-			.then((res) => {
-				let data = [{ key: null, value: null, text: "All Countries" }];
-				let allCountries = res.data.data.countries.map((c) => {
-					return { key: c.name, value: c.name, text: c.name };
-				});
-				setCountryOptions([...data, ...allCountries]);
-			})
-			.catch(() => {});
-	};
-
 	useEffect(() => {
+		const getRoleData = () => {
+			let queryParams = "";
+			let title = `Total Layoff `;
+			if (country && country !== "All Countries") {
+				queryParams += `country=${country}&`;
+				title += `in ${country}`;
+				axios
+					.get(`/role?${queryParams}`)
+					.then((res) => {
+						// console.log(res.data.data);
+						let labelCountries = res.data.data.map((el) => {
+							return el.name;
+						});
+						let seriesCountries = res.data.data.map((el) => {
+							return el.count;
+						});
+
+						setOptions({
+							...options.chart,
+							labels: labelCountries,
+							title: {
+								text: title,
+								style: {
+									fontSize: "16px",
+									fontWeight: "bold",
+								},
+							},
+						});
+						setSeries(seriesCountries);
+						let count = 0;
+						for (let i = 0; i < res.data.data.length; i++) {
+							count += parseInt(res.data.data[i].count);
+						}
+						// console.log(count);
+						setCountRole(count);
+					})
+					.catch(() => {});
+			} else {
+				title += `All Countries`;
+				axios
+					.get(`/role`)
+					.then((res) => {
+						// console.log(res.data.data);
+						let labelRoles = res.data.data.map((role) => {
+							return role.name;
+						});
+						let seriesRoles = res.data.data.map((role) => {
+							return role.count;
+						});
+						setOptions({
+							...options.chart,
+							labels: labelRoles,
+							title: {
+								text: title,
+								style: {
+									fontSize: "16px",
+									fontWeight: "bold",
+								},
+							},
+						});
+						setSeries(seriesRoles);
+						let count = 0;
+						for (let i = 0; i < res.data.data.length; i++) {
+							count += parseInt(res.data.data[i].count);
+						}
+						// let countRoles = res.data.data.map((el) => {
+						// 	count += parseInt(el.count);
+						// });
+						// console.log(count);
+						setCountRole(count);
+					})
+					.catch(() => {});
+			}
+		};
+		const getCountries = () => {
+			axios
+				.get("/country/list")
+				.then((res) => {
+					let data = [{ key: null, value: null, text: "All Countries" }];
+					let allCountries = res.data.data.countries.map((c) => {
+						return { key: c.name, value: c.name, text: c.name };
+					});
+					setCountryOptions([...data, ...allCountries]);
+				})
+				.catch(() => {});
+		};
 		getRoleData();
 		getCountries();
-	}, []);
+	}, [country, options.chart]);
+
+	let totalLayoff = null;
+	if (country && country !== "All Countries") {
+		totalLayoff = (
+			<h1>
+				Total Layoff in {country}: {countRole}
+			</h1>
+		);
+	} else {
+		totalLayoff = <h1>Total Layoff All Countries: {countRole}</h1>;
+	}
 
 	return (
 		<React.Fragment>
-			<Grid.Column width={6}>
-				<h1>Total: {countRole}</h1>
-			</Grid.Column>
+			<Grid.Column width={6}>{totalLayoff}</Grid.Column>
 			<Grid.Column width={10}>
 				<div className="graph-container">
 					<Select
