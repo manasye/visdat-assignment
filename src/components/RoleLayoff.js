@@ -34,10 +34,21 @@ const RoleLayoff = () => {
 						let seriesCountries = res.data.data.map((el) => {
 							return el.count;
 						});
-
+						let updatedLabelCountries = [...labelCountries];
+						let updatedSeriesCountries = [...seriesCountries];
+						let idxEmpty = [];
+						for (let i = 0; i < seriesCountries.length; i++) {
+							if (seriesCountries[i] === 0) {
+								idxEmpty.push(i);
+							}
+						}
+						for (let i = idxEmpty.length - 1; i >= 0; i--) {
+							updatedLabelCountries.splice(idxEmpty[i], 1);
+							updatedSeriesCountries.splice(idxEmpty[i], 1);
+						}
 						setOptions({
 							...options.chart,
-							labels: labelCountries,
+							labels: updatedLabelCountries,
 							title: {
 								text: title,
 								style: {
@@ -46,7 +57,7 @@ const RoleLayoff = () => {
 								},
 							},
 						});
-						setSeries(seriesCountries);
+						setSeries(updatedSeriesCountries);
 						let count = 0;
 						for (let i = 0; i < res.data.data.length; i++) {
 							count += parseInt(res.data.data[i].count);
