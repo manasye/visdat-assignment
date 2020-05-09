@@ -18,7 +18,7 @@ const News = () => {
       link:
         "https://asia.nikkei.com/Business/Startups/Coronavirus-drives-Indonesia-s-Traveloka-to-lay-off-staff",
       logo:
-        "https://mmc.tirto.id/image/otf/1024x535/2019/04/12/logo-traveloka-traveloka.com_ratio-16x9.jpg"
+        "https://d1nabgopwop1kh.cloudfront.net/hotel-asset/30000002000411580_wh_1"
     },
     {
       title: "Airy to Shut Down Business Permanently",

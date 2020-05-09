@@ -64,7 +64,6 @@ const RoleLayoff = () => {
               count += parseInt(res.data.data[i].count);
             }
             setCountRoles(res.data.data.filter(r => r.count !== 0).length);
-            setCountLayoff(count);
           })
           .catch(() => {});
       } else {
@@ -96,7 +95,6 @@ const RoleLayoff = () => {
               count += parseInt(res.data.data[i].count);
             }
             setCountRoles(res.data.data.filter(r => r.count !== 0).length);
-            setCountLayoff(count);
           })
           .catch(() => {});
       }
@@ -113,27 +111,36 @@ const RoleLayoff = () => {
         })
         .catch(() => {});
     };
-    const getCompanies = () => {
+    const getCounts = () => {
+      let queryParams = "";
+      if (country && country !== "All Countries") {
+        queryParams += `name=${country}`;
+      }
       axios
-        .get("/company/list")
+        .get(`/country?${queryParams}`)
         .then(res => {
-          setCountCompanies(res.data.data.companies.length);
+          const data = res.data.data;
+          setCountLayoff(data.employeeCount);
+          setCountCompanies(data.companyCount);
         })
         .catch(() => {});
     };
     getRoleData();
     getCountries();
-    getCompanies();
+    getCounts();
   }, [country, options.chart]);
 
   let totalLayoff = "",
-    totalRole = "";
+    totalRole = "",
+    totalCompany = "";
   if (country && country !== "All Countries") {
     totalLayoff = `Total Employee Layoff(s) in ${country}`;
     totalRole = `Total Role(s) in ${country}`;
+    totalCompany = `Total Company(s) in ${country}`;
   } else {
     totalLayoff = `Total Employee Layoff(s) in All Countries`;
     totalRole = `Total Role(s) in All Countries`;
+    totalCompany = `Total Company(s) in All Countries`;
   }
 
   return (
@@ -158,10 +165,7 @@ const RoleLayoff = () => {
       <Grid.Column width={6}>
         <Card title={totalLayoff} count={countLayoff} />
         <Card title={totalRole} count={countRoles} />
-        <Card
-          title="Total Companies Lay Off Worldwide"
-          count={countCompanies}
-        />
+        <Card title={totalCompany} count={countCompanies} />
       </Grid.Column>
     </React.Fragment>
   );
