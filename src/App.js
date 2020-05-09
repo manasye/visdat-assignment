@@ -3,6 +3,7 @@ import "./App.css";
 import RoleLayoff from "./components/RoleLayoff";
 import Top10 from "./components/Top10";
 import Navbar from "./components/Navbar";
+import News from "./components/News";
 import { Container, Grid } from "semantic-ui-react";
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
             <Top10 />
           </Grid.Column>
           <Grid.Column width={6}>
-            <div>a</div>
+            <News />
           </Grid.Column>
         </Grid>
       </Container>

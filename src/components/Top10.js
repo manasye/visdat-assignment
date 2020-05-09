@@ -28,8 +28,7 @@ const Top10 = () => {
   const [countOptions] = useState([
     { key: 5, value: 5, text: 5 },
     { key: 10, value: 10, text: 10 },
-    { key: 20, value: 20, text: 20 },
-    { key: 25, value: 25, text: 25 }
+    { key: 25, value: 25, text: 25 },
   ]);
 
   const getData = () => {
@@ -126,7 +125,7 @@ const Top10 = () => {
         className="graph-select"
         onChange={(e, { value }) => setCount(value)}
       />
-      <Chart options={options} series={series} type="bar" width={600} height={480}/>
+      <Chart options={options} series={series} type="bar" width={600} height={520}/>
     </div>
   );
 };
