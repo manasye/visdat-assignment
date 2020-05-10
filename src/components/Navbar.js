@@ -14,7 +14,7 @@ const Navbar = () => {
           rel="noopener noreferrer"
           target="_blank"
         >
-          Data as of May 1st, 2020
+          Data as of May 10, 2020 09:00 AM
         </a>
       </Container>
     </div>
