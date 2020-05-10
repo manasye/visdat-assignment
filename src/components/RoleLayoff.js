@@ -59,10 +59,6 @@ const RoleLayoff = () => {
               }
             });
             setSeries(updatedSeriesCountries);
-            let count = 0;
-            for (let i = 0; i < res.data.data.length; i++) {
-              count += parseInt(res.data.data[i].count);
-            }
             setCountRoles(res.data.data.filter(r => r.count !== 0).length);
           })
           .catch(() => {});
@@ -90,10 +86,6 @@ const RoleLayoff = () => {
               }
             });
             setSeries(seriesRoles);
-            let count = 0;
-            for (let i = 0; i < res.data.data.length; i++) {
-              count += parseInt(res.data.data[i].count);
-            }
             setCountRoles(res.data.data.filter(r => r.count !== 0).length);
           })
           .catch(() => {});
